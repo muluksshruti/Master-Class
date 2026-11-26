@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OOP Part 1: Interactive Master Slides | Aditya Tambe</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;700;800&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #070b14;
+      color: #e2e8f0;
+      margin: 0;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .font-code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    .slide {
+      display: none;
+      opacity: 0;
+      transform: scale(0.98);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Glows & Neon Accents */
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .glow-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+    }
+    .glow-green {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+
+    /* Animated pulse badge */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="w-screen h-screen flex flex-col justify-between bg-[#070b14] text-slate-100">
+
+  <!-- Top Progress Bar & Header -->
+  <header class="w-full px-8 py-4 flex items-center justify-between border-b border-slate-800/80 bg-[#0b1120]/80 backdrop-blur z-50">
+    <div class="flex items-center space-x-3">
+      <div class="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></div>
+      <span class="text-xs tracking-widest uppercase font-bold text-cyan-400">AI/ML Engineering Masterclass</span>
+      <span class="text-slate-600">|</span>
+      <span class="text-xs text-slate-400 font-medium">Module 0: Week 1 — Object-Oriented Programming (OOP) Part 1</span>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <span id="slideCounter" class="text-xs font-code font-semibold px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-cyan-300">
+        Slide 1 / 8
+      </span>
+      <button onclick="toggleFullScreen()" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-800/60 border border-slate-700 transition" title="Toggle Fullscreen (F)">
+        ⛶ Fullscreen
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Slide Container (16:9 Aspect Ratio Container) -->
+  <main class="flex-1 w-full max-w-7xl mx-auto p-6 md:p-8 flex items-center justify-center relative overflow-hidden">
+
+    <!-- SLIDE 1: TITLE SLIDE -->
+    <section class="slide active flex-col justify-center items-center text-center w-full h-full max-w-5xl" data-title="Title Slide">
+      <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-6">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        <span>Python Foundations for AI Engineers</span>
+      </div>
+
+      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+        Object-Oriented Programming <br>
+        <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">
+          (OOP) — Part 1
+        </span>
+      </h1>
+
+      <p class="text-lg md:text-xl text-slate-300 max-w-3xl leading-relaxed mb-10">
+        Learn how Python actually structures data and behavior from the ground up: <br>
+        <span class="text-cyan-400 font-code font-medium">Classes</span>, 
+        <span class="text-purple-400 font-code font-medium">Objects</span>, 
+        the <span class="text-emerald-400 font-code font-medium">__init__</span> constructor, 
+        and the mystery of <span class="text-amber-400 font-code font-medium">self</span>.
+      </p>
+
+      <div class="grid grid-cols-3 gap-6 w-full max-w-2xl text-left">
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="text-cyan-400 font-bold text-sm mb-1">01. Blueprint</div>
+          <div class="text-xs text-slate-400">Classes as templates for memory allocation.</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="text-purple-400 font-bold text-sm mb-1">02. State</div>
+          <div class="text-xs text-slate-400">Binding instance data with <code>__init__</code>.</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="text-emerald-400 font-bold text-sm mb-1">03. Action</div>
+          <div class="text-xs text-slate-400">Instance methods operating on <code>self</code>.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: PROCEDURAL VS OOP -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl" data-title="Procedural vs. OOP">
+      <div class="mb-6">
+        <span class="text-xs uppercase tracking-wider font-bold text-cyan-400">Core Paradigm Shift</span>
+        <h2 class="text-3xl font-extrabold text-white">Procedural vs. Object-Oriented Code</h2>
+        <p class="text-sm text-slate-400 mt-1">Why do ML frameworks like PyTorch and Scikit-Learn rely 100% on OOP?</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8 items-stretch">
+        <!-- Procedural Card -->
+        <div class="p-6 rounded-2xl bg-slate-900/90 border border-red-500/20 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2.5 py-1 rounded text-xs font-bold uppercase bg-red-950/60 text-red-400 border border-red-800/40">Legacy Procedural</span>
+              <span class="text-xs text-slate-500 font-code">Separate State & Logic</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Variables floating disconnected from functions</h3>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+              Functions take data as arguments, modify it, and return new data. If you have 50 students, you manage 50 separate variables manually.
+            </p>
+            <div class="p-4 rounded-xl bg-black/60 font-code text-xs text-slate-300 leading-relaxed border border-slate-800">
+              <span class="text-slate-500"># Data is scattered</span><br>
+              student1_name = <span class="text-amber-300">"Rahul"</span><br>
+              student1_marks = <span class="text-purple-300">85</span><br><br>
+              <span class="text-slate-500"># Functions need variables passed manually</span><br>
+              <span class="text-cyan-400">def</span> <span class="text-emerald-400">calculate_grade</span>(marks):<br>
+              &nbsp;&nbsp;<span class="text-cyan-400">return</span> <span class="text-amber-300">"A"</span> <span class="text-cyan-400">if</span> marks >= <span class="text-purple-300">80</span> <span class="text-cyan-400">else</span> <span class="text-amber-300">"B"</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-red-400/80 flex items-center">
+            ⚠️ Hard to scale, state leakage, repetitive argument passing.
+          </div>
+        </div>
+
+        <!-- OOP Card -->
+        <div class="p-6 rounded-2xl bg-slate-900/90 border border-emerald-500/30 glow-green flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2.5 py-1 rounded text-xs font-bold uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">Modern OOP</span>
+              <span class="text-xs text-emerald-400/80 font-code">Encapsulated Entity</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Data + Actions bundled in one Object</h3>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+              Every student is a self-contained unit that knows its own name, marks, and can calculate its own grade automatically.
+            </p>
+            <div class="p-4 rounded-xl bg-black/60 font-code text-xs text-slate-300 leading-relaxed border border-slate-800">
+              <span class="text-cyan-400">class</span> <span class="text-emerald-400">Student</span>:<br>
+              &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-purple-400">__init__</span>(<span class="text-amber-300">self</span>, name, marks):<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.name = name<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.marks = marks<br><br>
+              &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-emerald-400">get_grade</span>(<span class="text-amber-300">self</span>):<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-cyan-400">return</span> <span class="text-amber-300">"A"</span> <span class="text-cyan-400">if</span> <span class="text-amber-300">self</span>.marks >= <span class="text-purple-300">80</span> <span class="text-cyan-400">else</span> <span class="text-amber-300">"B"</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-emerald-400 flex items-center">
+            ✓ Modular, reusable, matches real-world entities (and AI models).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: BLUEPRINTS VS INSTANCES (INTERACTIVE) -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl" data-title="Blueprints vs Instances">
+      <div class="mb-4">
+        <span class="text-xs uppercase tracking-wider font-bold text-cyan-400">Conceptual Model</span>
+        <h2 class="text-3xl font-extrabold text-white">Class as Blueprint vs. Object as Instance</h2>
+        <p class="text-sm text-slate-400 mt-1">A class takes no memory for data until you build an instance from it.</p>
+      </div>
+
+      <div class="grid grid-cols-12 gap-6 items-center">
+        <!-- Blueprint Left Column -->
+        <div class="col-span-5 p-5 rounded-2xl bg-slate-900 border border-cyan-500/30">
+          <div class="text-xs uppercase font-bold text-cyan-400 mb-2">The Blueprint (Code Definition)</div>
+          <div class="p-3 bg-black/60 rounded-lg font-code text-xs text-slate-300 border border-slate-800 mb-4">
+            <span class="text-cyan-400">class</span> <span class="text-emerald-400">Car</span>:<br>
+            &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-purple-400">__init__</span>(<span class="text-amber-300">self</span>, brand, color):<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.brand = brand<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.color = color
+          </div>
+          <button onclick="instantiateCar()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs uppercase tracking-wider transition shadow-lg shadow-cyan-500/20 active:scale-95">
+            + Instantiate New Car Object in RAM
+          </button>
+        </div>
+
+        <!-- Factory Arrow -->
+        <div class="col-span-1 flex flex-col items-center justify-center text-cyan-400">
+          <div class="text-2xl font-bold animate-pulse">➔</div>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mt-1">RAM</span>
+        </div>
+
+        <!-- Live Memory Instances Right Column -->
+        <div class="col-span-6 p-5 rounded-2xl bg-slate-950 border border-slate-800 min-h-[260px] flex flex-col justify-start">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs uppercase font-bold text-purple-400">Allocated Objects in Memory (Heap)</div>
+            <span id="carCountBadge" class="text-[10px] font-code px-2 py-0.5 rounded bg-purple-950/70 border border-purple-800 text-purple-300">0 Objects</span>
+          </div>
+
+          <div id="instancesContainer" class="flex flex-col gap-2.5 overflow-y-auto max-h-[200px] pr-1">
+            <div id="placeholderMsg" class="text-xs text-slate-600 italic text-center py-10">
+              Click the button on the left to instantiate objects into memory.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: THE __INIT__ CONSTRUCTOR & HOW IT RUNS -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl" data-title="The __init__ Constructor">
+      <div class="mb-4">
+        <span class="text-xs uppercase tracking-wider font-bold text-purple-400">Object Birth Lifecycle</span>
+        <h2 class="text-3xl font-extrabold text-white">How the <code>__init__</code> Constructor Works</h2>
+        <p class="text-sm text-slate-400 mt-1">What actually happens behind the scenes when you type <code>s1 = Student("Rahul", 21)</code>?</p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Step 1 -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 relative">
+          <div class="absolute -top-3 left-4 px-2 py-0.5 rounded bg-cyan-500 text-black text-[10px] font-black uppercase">Step 1: Allocation</div>
+          <h3 class="text-sm font-bold text-white mt-2 mb-2">Memory Allocation</h3>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+            Python calls <code>__new__</code> under the hood to carve out a new empty memory address block on the heap.
+          </p>
+          <div class="p-2.5 bg-black/70 rounded-lg font-code text-[11px] text-slate-300 border border-slate-800">
+            Address: <span class="text-cyan-400">0x7fa281b490</span><br>
+            State: <span class="text-slate-500">{empty object}</span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-purple-500/40 glow-purple relative">
+          <div class="absolute -top-3 left-4 px-2 py-0.5 rounded bg-purple-500 text-black text-[10px] font-black uppercase">Step 2: Self Binding</div>
+          <h3 class="text-sm font-bold text-white mt-2 mb-2"><code>self</code> is Passed</h3>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+            Python triggers <code>__init__</code> and passes that new memory address as the first parameter: <strong>self</strong>.
+          </p>
+          <div class="p-2.5 bg-black/70 rounded-lg font-code text-[11px] text-purple-300 border border-slate-800">
+            def __init__(<span class="text-amber-300 font-bold">self</span>, name, age):<br>
+            &nbsp;&nbsp;<span class="text-slate-500"># self = 0x7fa281b490</span>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-emerald-500/40 glow-green relative">
+          <div class="absolute -top-3 left-4 px-2 py-0.5 rounded bg-emerald-500 text-black text-[10px] font-black uppercase">Step 3: State Stored</div>
+          <h3 class="text-sm font-bold text-white mt-2 mb-2">Attributes Attached</h3>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+            Writing <code>self.name = name</code> binds the values into that object's private memory namespace dictionary.
+          </p>
+          <div class="p-2.5 bg-black/70 rounded-lg font-code text-[11px] text-emerald-300 border border-slate-800">
+            s1.__dict__ = {<br>
+            &nbsp;&nbsp;<span class="text-cyan-300">'name'</span>: <span class="text-amber-300">'Rahul'</span>,<br>
+            &nbsp;&nbsp;<span class="text-cyan-300">'age'</span>: <span class="text-purple-300">21</span><br>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-center space-x-3 text-xs text-amber-200">
+        <span class="text-base">💡</span>
+        <span><strong>Trainer Pro-Tip for Students:</strong> <code>__init__</code> never returns a value! It always returns <code>None</code>. Its sole job is to populate the instance.</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: THE 'SELF' KEYWORD IN DEPTH -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl" data-title="Demystifying self">
+      <div class="mb-4">
+        <span class="text-xs uppercase tracking-wider font-bold text-amber-400">The Core Mystery</span>
+        <h2 class="text-3xl font-extrabold text-white">Demystifying the <code>self</code> Keyword</h2>
+        <p class="text-sm text-slate-400 mt-1">Why do students forget it, and how does Python translate it behind the scenes?</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8 items-center">
+        <!-- Explanation Left -->
+        <div class="space-y-4">
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+            <h4 class="text-sm font-bold text-cyan-400 mb-1">1. It is the Explicit Instance Reference</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              In Java or C++, <code>this</code> is hidden behind the scenes. In Python, "explicit is better than implicit". 
+              <code>self</code> is explicitly passed so methods know which object they are modifying.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+            <h4 class="text-sm font-bold text-purple-400 mb-1">2. Method Call Syntactic Sugar</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              When you write <code class="text-amber-300">student1.get_name()</code>, Python automatically rewrites it to: <br>
+              <code class="text-cyan-300">Student.get_name(student1)</code>.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+            <h4 class="text-sm font-bold text-red-400 mb-1">3. What if you forget self?</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Writing <code class="text-red-300">name = name</code> inside <code>__init__</code> creates a local variable that is <strong>destroyed</strong> as soon as the function exits!
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Classroom Analogy Right -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-amber-500/30 p-6 flex flex-col justify-between">
+          <div>
+            <div class="text-xs uppercase font-bold text-amber-400 mb-2">The Classroom Analogy</div>
+            <h3 class="text-lg font-bold text-white mb-3">"Open Your Notebook!"</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              If a trainer walks into a room of 30 students and shouts: <br>
+              <em class="text-cyan-300 font-medium">"Write down today's date in your notebook!"</em>
+            </p>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Does student #1 write in student #2's notebook? <strong class="text-white">No!</strong><br>
+              Each student operates on <span class="text-amber-400 font-bold">their own</span> notebook.
+            </p>
+            <div class="p-3 bg-black/60 rounded-xl border border-slate-800 font-code text-xs text-slate-300">
+              <span class="text-slate-500"># In Python's eyes:</span><br>
+              Rahul.write_note(<span class="text-amber-300">self</span>=<span class="text-cyan-300">Rahul</span>)<br>
+              Priya.write_note(<span class="text-amber-300">self</span>=<span class="text-cyan-300">Priya</span>)
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-amber-300">
+            <code>self</code> is how an object isolates its own memory from every other object.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: INSTANCE VS CLASS VARIABLES (INTERACTIVE EXPERIMENT) -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl" data-title="Instance vs Class Variables">
+      <div class="mb-4">
+        <span class="text-xs uppercase tracking-wider font-bold text-emerald-400">Memory Scope Experiment</span>
+        <h2 class="text-3xl font-extrabold text-white">Instance Variables vs. Class Variables</h2>
+        <p class="text-sm text-slate-400 mt-1">Watch how changing a class variable updates all objects, while instance variables remain isolated.</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8 items-start">
+        <!-- Interactive Controls -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div class="text-xs uppercase font-bold text-cyan-400">Class Definition</div>
+          <div class="p-3 bg-black/60 rounded-xl font-code text-xs text-slate-300 border border-slate-800">
+            <span class="text-cyan-400">class</span> <span class="text-emerald-400">Employee</span>:<br>
+            &nbsp;&nbsp;<span class="text-purple-400 font-bold">company</span> = <span id="codeCompanyDisplay" class="text-amber-300">"TechCorp"</span> <span class="text-slate-500"># Class Var</span><br><br>
+            &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-purple-400">__init__</span>(<span class="text-amber-300">self</span>, name, salary):<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.name = name <span class="text-slate-500"># Instance Var</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.salary = salary
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <div class="text-xs text-slate-400 font-semibold">Interactive Triggers:</div>
+            <div class="flex gap-2">
+              <button onclick="changeCompanyName()" class="flex-1 py-2 px-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition">
+                Change Class Company Name
+              </button>
+              <button onclick="raiseSalary()" class="flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
+                Give Amit a Raise (+₹10k)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Object Cards -->
+        <div class="space-y-4">
+          <!-- Emp 1 -->
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex justify-between items-center">
+            <div>
+              <div class="text-xs font-bold text-cyan-400 uppercase">Object Instance 1 (emp1)</div>
+              <div class="text-sm font-bold text-white">Amit</div>
+              <div class="text-xs text-slate-400">Salary: <span id="emp1Salary" class="text-emerald-400 font-code font-bold">₹60,000</span></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-500 uppercase font-bold">Shared Company:</div>
+              <div id="emp1Company" class="text-xs font-code font-bold text-purple-300 px-2.5 py-1 rounded bg-purple-950/60 border border-purple-800">
+                TechCorp
+              </div>
+            </div>
+          </div>
+
+          <!-- Emp 2 -->
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex justify-between items-center">
+            <div>
+              <div class="text-xs font-bold text-cyan-400 uppercase">Object Instance 2 (emp2)</div>
+              <div class="text-sm font-bold text-white">Neha</div>
+              <div class="text-xs text-slate-400">Salary: <span class="text-emerald-400 font-code font-bold">₹75,000</span></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-500 uppercase font-bold">Shared Company:</div>
+              <div id="emp2Company" class="text-xs font-code font-bold text-purple-300 px-2.5 py-1 rounded bg-purple-950/60 border border-purple-800">
+                TechCorp
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] text-slate-400">
+            📌 Notice: <strong>Company</strong> updates for both instances because it lives in the Class. <strong>Salary</strong> updates ONLY for Amit because it lives in his instance.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: INSTANCE METHODS (INTERACTIVE BANK ACCOUNT) -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl" data-title="Instance Methods in Action">
+      <div class="mb-4">
+        <span class="text-xs uppercase tracking-wider font-bold text-emerald-400">Hands-on Simulator</span>
+        <h2 class="text-3xl font-extrabold text-white">Instance Methods: Changing State</h2>
+        <p class="text-sm text-slate-400 mt-1">Methods are functions that read and alter an object's internal state via <code>self</code>.</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8 items-center">
+        <!-- Simulator -->
+        <div class="p-6 rounded-2xl bg-slate-900 border border-cyan-500/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold uppercase text-cyan-400">Live BankAccount Instance</span>
+              <span class="text-xs font-code text-slate-500">Holder: Aditya</span>
+            </div>
+
+            <div class="p-5 rounded-xl bg-black/60 border border-slate-800 text-center mb-6">
+              <div class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Current Balance</div>
+              <div id="bankBalanceDisplay" class="text-4xl font-extrabold font-code text-emerald-400 transition-all duration-300">
+                ₹5,000
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <button onclick="depositMoney(2000)" class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition active:scale-95">
+                + Deposit ₹2,000
+              </button>
+              <button onclick="withdrawMoney(1500)" class="py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider transition active:scale-95">
+                - Withdraw ₹1,500
+              </button>
+            </div>
+          </div>
+
+          <div id="bankLog" class="mt-4 p-3 bg-slate-950 rounded-lg text-xs font-code text-slate-400 border border-slate-800/80 h-16 flex items-center justify-center text-center">
+            Ready to execute transactions via acc.deposit() or acc.withdraw().
+          </div>
+        </div>
+
+        <!-- Code Behind it -->
+        <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="text-xs uppercase font-bold text-slate-400 mb-2 font-code">Python Method Logic</div>
+          <div class="p-4 bg-black/80 rounded-xl font-code text-xs text-slate-300 leading-relaxed border border-slate-800">
+            <span class="text-cyan-400">class</span> <span class="text-emerald-400">BankAccount</span>:<br>
+            &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-purple-400">__init__</span>(<span class="text-amber-300">self</span>, holder, bal):<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.holder = holder<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.balance = bal<br><br>
+            &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-emerald-400">deposit</span>(<span class="text-amber-300">self</span>, amount):<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.balance += amount<br><br>
+            &nbsp;&nbsp;<span class="text-cyan-400">def</span> <span class="text-emerald-400">withdraw</span>(<span class="text-amber-300">self</span>, amount):<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-cyan-400">if</span> amount <= <span class="text-amber-300">self</span>.balance:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-amber-300">self</span>.balance -= amount
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: SUMMARY & ROADMAP -->
+    <section class="slide flex-col justify-center w-full h-full max-w-6xl text-center" data-title="Summary & Next Steps">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-950/40 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4 mx-auto">
+        <span>Week 1 Wrap-up</span>
+      </div>
+
+      <h2 class="text-4xl font-extrabold text-white mb-6">What We Mastered Today</h2>
+
+      <div class="grid grid-cols-4 gap-4 text-left max-w-5xl mx-auto mb-8">
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <div class="text-cyan-400 font-bold text-sm mb-1">1. Class vs Object</div>
+          <div class="text-xs text-slate-400">Blueprint vs physical memory allocation in RAM.</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <div class="text-purple-400 font-bold text-sm mb-1">2. __init__ Constructor</div>
+          <div class="text-xs text-slate-400">Runs automatically to initialize instance attributes.</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <div class="text-amber-400 font-bold text-sm mb-1">3. The `self` Keyword</div>
+          <div class="text-xs text-slate-400">Explicit pointer to the specific object instance.</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <div class="text-emerald-400 font-bold text-sm mb-1">4. Instance vs Class</div>
+          <div class="text-xs text-slate-400">Private per-object memory vs shared global class state.</div>
+        </div>
+      </div>
+
+      <div class="p-4 max-w-2xl mx-auto rounded-2xl bg-gradient-to-r from-cyan-950/40 via-purple-950/40 to-slate-900 border border-slate-800 text-xs text-slate-300">
+        <span class="text-cyan-400 font-bold uppercase tracking-wider">Coming Up in Week 2:</span> <br>
+        Inheritance (<code>super()</code>), Method Overriding, Encapsulation (Private <code>__vars</code>), and Dunder Methods (<code>__str__</code>, <code>__len__</code>).
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <footer class="w-full px-8 py-4 flex items-center justify-between border-t border-slate-800/80 bg-[#0b1120]/80 backdrop-blur z-50">
+    <div class="flex items-center space-x-2">
+      <span class="text-xs text-slate-500 font-code">Controls:</span>
+      <span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-slate-300 font-code">← Prev</span>
+      <span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-slate-300 font-code">Next → / Space</span>
+    </div>
+
+    <!-- Slide Thumbnails / Indicators -->
+    <div id="slideIndicators" class="flex items-center space-x-2"></div>
+
+    <div class="flex items-center space-x-3">
+      <button onclick="prevSlide()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold transition border border-slate-700">
+        Previous
+      </button>
+      <button onclick="nextSlide()" class="px-4 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold transition shadow-md shadow-cyan-500/20">
+        Next Slide ➔
+      </button>
+    </div>
+  </footer>
+
+  <!-- Script for Navigation & Interactive Demonstrations -->
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const counter = document.getElementById('slideCounter');
+    const indicatorsContainer = document.getElementById('slideIndicators');
+
+    // Create Indicators
+    slides.forEach((slide, idx) => {
+      const dot = document.createElement('button');
+      dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-cyan-400 w-6' : 'bg-slate-700'}`;
+      dot.onclick = () => goToSlide(idx);
+      indicatorsContainer.appendChild(dot);
+    });
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+
+      counter.textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+      const dots = indicatorsContainer.querySelectorAll('button');
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.className = 'w-6 h-2.5 rounded-full bg-cyan-400 transition-all duration-300';
+        } else {
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-700 transition-all duration-300 hover:bg-slate-500';
+        }
+      });
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(idx) {
+      currentSlide = idx;
+      updateSlide();
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullScreen();
+      }
+    });
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    // --- Interactive Simulator Logic ---
+
+    // 1. Car Blueprint instantiation
+    let carCount = 0;
+    const carColors = ['#06b6d4', '#a855f7', '#10b981', '#f59e0b', '#ec4899'];
+    const carBrands = ['Tata Nexon', 'Mahindra XUV700', 'Tesla Model 3', 'Hyundai Creta'];
+
+    function instantiateCar() {
+      carCount++;
+      const container = document.getElementById('instancesContainer');
+      const placeholder = document.getElementById('placeholderMsg');
+      if (placeholder) placeholder.remove();
+
+      const color = carColors[(carCount - 1) % carColors.length];
+      const brand = carBrands[(carCount - 1) % carBrands.length];
+      const hexAddress = '0x' + Math.floor(Math.random() * 16777215).toString(16);
+
+      const div = document.createElement('div');
+      div.className = 'p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center text-xs animate-fade-in';
+      div.style.borderColor = color + '50';
+      div.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 rounded-full" style="background-color: ${color}"></div>
+          <span class="font-bold text-white">car${carCount} (${brand})</span>
+        </div>
+        <div class="font-code text-[10px] text-slate-400">
+          RAM: <span style="color: ${color}">${hexAddress}</span>
+        </div>
+      `;
+      container.prepend(div);
+      document.getElementById('carCountBadge').textContent = `${carCount} Objects in RAM`;
+    }
+
+    // 2. Class vs Instance Variable demo
+    const companies = ['TechCorp Global', 'Google DeepMind', 'Michelin Digital', 'Datametica AI'];
+    let compIdx = 0;
+    let amitSalary = 60000;
+
+    function changeCompanyName() {
+      compIdx = (compIdx + 1) % companies.length;
+      const newName = companies[compIdx];
+      document.getElementById('codeCompanyDisplay').textContent = `"${newName}"`;
+      document.getElementById('emp1Company').textContent = newName;
+      document.getElementById('emp2Company').textContent = newName;
+
+      // flash animation
+      const b1 = document.getElementById('emp1Company');
+      const b2 = document.getElementById('emp2Company');
+      b1.classList.add('scale-110');
+      b2.classList.add('scale-110');
+      setTimeout(() => {
+        b1.classList.remove('scale-110');
+        b2.classList.remove('scale-110');
+      }, 300);
+    }
+
+    function raiseSalary() {
+      amitSalary += 10000;
+      const el = document.getElementById('emp1Salary');
+      el.textContent = `₹${amitSalary.toLocaleString()}`;
+      el.classList.add('text-yellow-300');
+      setTimeout(() => el.classList.remove('text-yellow-300'), 400);
+    }
+
+    // 3. Bank Account Simulator
+    let balance = 5000;
+    function depositMoney(amt) {
+      balance += amt;
+      updateBank();
+      document.getElementById('bankLog').innerHTML = `
+        <span class="text-emerald-400 font-bold">acc.deposit(${amt})</span> executed!<br>
+        <span class="text-slate-300">self.balance updated from ₹${balance - amt} ➔ ₹${balance}</span>
+      `;
+    }
+
+    function withdrawMoney(amt) {
+      if (balance >= amt) {
+        balance -= amt;
+        updateBank();
+        document.getElementById('bankLog').innerHTML = `
+          <span class="text-red-400 font-bold">acc.withdraw(${amt})</span> executed!<br>
+          <span class="text-slate-300">self.balance updated from ₹${balance + amt} ➔ ₹${balance}</span>
+        `;
+      } else {
+        document.getElementById('bankLog').innerHTML = `
+          <span class="text-amber-400 font-bold">Transaction Failed:</span> Insufficient funds for ₹${amt}!
+        `;
+      }
+    }
+
+    function updateBank() {
+      const el = document.getElementById('bankBalanceDisplay');
+      el.textContent = `₹${balance.toLocaleString()}`;
+      el.classList.add('scale-110');
+      setTimeout(() => el.classList.remove('scale-110'), 250);
+    }
+  </script>
+</body>
+</html>
